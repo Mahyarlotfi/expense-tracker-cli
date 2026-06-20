@@ -6,6 +6,9 @@ while True:
             data = json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
         data = []
+        
+
+    
     choice = int(input(
         "=====================\n"
         " 1 - Add Expense\n"
@@ -16,10 +19,16 @@ while True:
         ))
     
     if choice == 1:
+        ids = [item["id"] for item in data]
+        if not ids:
+            new_id = 1
+        else:
+            new_id = max(ids)+1
         amount = float(input("Please enter amount: "))
         category = input("Please enter category: ")
         description = input("Please enter description: ")
         expense = {
+            "id": new_id,
 	        "amount": amount,
 	        "category": category,
 	        "description": description
