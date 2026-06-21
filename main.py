@@ -6,6 +6,25 @@ def delete_expense(id, data):
             data.remove(item)
             break
         
+def update_expense(id, data):
+    for index, item in enumerate(data):
+        if item["id"] == id:
+            expense = create_expense(id)
+            data[index] = expense
+            break
+            
+def create_expense(new_id):
+    amount = float(input("Please enter amount: "))
+    category = input("Please enter category: ")
+    description = input("Please enter description: ")
+    expense = {
+            "id": new_id,
+	        "amount": amount,
+	        "category": category,
+	        "description": description
+        }
+    return expense
+        
 def write(data):
     with open("expenses.json", "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4)
@@ -17,13 +36,12 @@ while True:
     except (FileNotFoundError, json.JSONDecodeError):
         data = []
         
-
-    
     choice = int(input(
         "=====================\n"
         " 1 - Add Expense\n"
         " 2 - View Expense\n"
         " 3 - Delete Expense\n"
+        " 4 - Update Expense\n"
         " 0 - Exit\n"
         "=====================\n"
         "Enter your choice: "
@@ -35,17 +53,7 @@ while True:
             new_id = 1
         else:
             new_id = max(ids)+1
-        amount = float(input("Please enter amount: "))
-        category = input("Please enter category: ")
-        description = input("Please enter description: ")
-        expense = {
-            "id": new_id,
-	        "amount": amount,
-	        "category": category,
-	        "description": description
-            
-        }
-
+        expense = create_expense(new_id)
         data.append(expense)
         write(data)
             
@@ -56,6 +64,11 @@ while True:
     elif choice == 3:
         delete_id = int(input("Please enter your id: "))
         delete_expense(delete_id, data)
+        write(data)
+        
+    elif choice == 4:
+        update_id = int(input("Please enter your id: "))
+        update_expense(update_id, data)
         write(data)
         
     elif choice == 0:
