@@ -1,64 +1,58 @@
-from app.storage import read_file, write
-from app.expense import (
-    delete_expense,
-    create_expense,
-    update_expense
-    )
+"""Main entry point for expense tracker application."""
 
-    
-data = read_file()
+from app.database import (
+    add_table,
+    add_expense,
+    delete_expense,
+    update_expense,
+    close_connection,
+)
+from app.expense import create_expense
+from app.cli import menu, expense_table
+
+add_table()
 
 while True:
-    choice = input(
-        "=====================\n"
-        " 1 - Add Expense\n"
-        " 2 - View Expense\n"
-        " 3 - Delete Expense\n"
-        " 4 - Update Expense\n"
-        " 0 - Exit\n"
-        "=====================\n"
-        "Enter your choice: "
-        )
-        
-    if not choice.isdigit():
+    choice = menu()
+    if choice is None:
         print("Invalid input, please enter a number")
         continue
-    else:
-        choice = int(choice)
-    
+
     if choice == 1:
-        ids = [item["id"] for item in data]
-        if not ids:
-            new_id = 1
-        else:
-            new_id = max(ids)+1
-        expense = create_expense(new_id)
+        expense = create_expense()
         if expense is None:
             continue
-        data.append(expense)
-        write(data)
-            
+        add_expense(
+            amount=expense["amount"],
+            category=expense["category"],
+            description=expense["description"],
+        )
+
     elif choice == 2:
-        for i in data:
-            print(i)
-    
+        expense_table()
+
     elif choice == 3:
         try:
             delete_id = int(input("Please enter your id: "))
-            delete_expense(delete_id, data)
-            write(data)
+            delete_expense(delete_id)
         except ValueError:
             print("Please enter a valid id")
-        
-        
+
     elif choice == 4:
         try:
             update_id = int(input("Please enter your id: "))
-            update_expense(update_id, data)
-            write(data)
+            expense = create_expense()
+            if expense is None:
+                continue
+            update_expense(
+                expense_id=update_id,
+                amount=expense["amount"],
+                category=expense["category"],
+                description=expense["description"],
+            )
         except ValueError:
             print("Please enter a valid id")
-        
-        
+
     elif choice == 0:
+        close_connection()
         break
