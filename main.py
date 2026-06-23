@@ -1,11 +1,9 @@
 """Main entry point for expense tracker application."""
-
 from app.database import (
     add_table,
     add_expense,
     delete_expense,
     update_expense,
-    close_connection,
 )
 from app.expense import create_expense
 from app.cli import menu, expense_table
@@ -54,5 +52,4 @@ while True:
             print("Please enter a valid id")
 
     elif choice == 0:
-        close_connection()
         break
