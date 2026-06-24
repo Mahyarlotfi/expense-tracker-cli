@@ -1,4 +1,5 @@
 """Main entry point for expense tracker application."""
+
 from app.database import (
     add_table,
     add_expense,

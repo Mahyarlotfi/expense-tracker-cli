@@ -3,12 +3,26 @@
 import sqlite3
 
 DB_NAME = "expenses.db"
-def get_connection():
-    return sqlite3.connect(DB_NAME)
 
-def add_table():
+
+def get_connection(db_name=None):
+    """Return a SQLite database connection.
+
+    Args:
+        db_name: Optional database file name. Uses the default database
+            when not provided.
+
+    Returns:
+        sqlite3.Connection: An active SQLite connection object.
+    """
+    if db_name is None:
+        db_name = DB_NAME
+    return sqlite3.connect(db_name)
+
+
+def add_table(db_name=None):
     """Create expenses table if it does not exist."""
-    con = get_connection()
+    con = get_connection(db_name)
     try:
         cur = con.cursor()
         cur.execute("""
@@ -24,9 +38,9 @@ def add_table():
         con.close()
 
 
-def add_expense(amount, category, description):
+def add_expense(amount, category, description, db_name=None):
     """Insert a new expense into database."""
-    con = get_connection()
+    con = get_connection(db_name)
     try:
         cur = con.cursor()
         cur.execute(
@@ -41,9 +55,9 @@ def add_expense(amount, category, description):
         con.close()
 
 
-def get_all_expenses():
+def get_all_expenses(db_name=None):
     """Fetch all expenses from database."""
-    con = get_connection()
+    con = get_connection(db_name)
     try:
         cur = con.cursor()
         cur.execute("SELECT * FROM expenses")
@@ -51,12 +65,11 @@ def get_all_expenses():
     finally:
         con.close()
     return rows
-    
 
 
-def delete_expense(expense_id):
+def delete_expense(expense_id, db_name=None):
     """Delete expense by ID."""
-    con = get_connection()
+    con = get_connection(db_name)
     try:
         cur = con.cursor()
         cur.execute(
@@ -68,9 +81,9 @@ def delete_expense(expense_id):
         con.close()
 
 
-def update_expense(expense_id, amount, category, description):
+def update_expense(expense_id, amount, category, description, db_name=None):
     """Update an existing expense."""
-    con = get_connection()
+    con = get_connection(db_name)
     try:
         cur = con.cursor()
         cur.execute(
@@ -86,4 +99,3 @@ def update_expense(expense_id, amount, category, description):
         con.commit()
     finally:
         con.close()
-
