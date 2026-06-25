@@ -1,3 +1,7 @@
+"""Tests for database layer."""
+
+# pylint: disable=redefined-outer-name
+
 import os
 
 import pytest
@@ -10,11 +14,14 @@ from app.database import (
     update_expense,
 )
 
+from app.database import get_connection
+
 TEST_DB = "test_expenses.db"
 
 
 @pytest.fixture
 def clean_db():
+    """Create a temporary clean database for each test."""
     if os.path.exists(TEST_DB):
         os.remove(TEST_DB)
 
@@ -27,6 +34,7 @@ def clean_db():
 
 
 def test_add_expense(clean_db):
+    """Test adding a new expense."""
     add_expense(
         100,
         "food",
@@ -45,6 +53,7 @@ def test_add_expense(clean_db):
 
 
 def test_get_all_expenses(clean_db):
+    """Test retrieving all expenses."""
     data = [
         (100, "food", "pizza"),
         (50, "transport", "taxi"),
@@ -65,6 +74,7 @@ def test_get_all_expenses(clean_db):
 
 
 def test_delete_expense(clean_db):
+    """Test deleting an expense."""
     add_expense(
         100,
         "food",
@@ -82,6 +92,7 @@ def test_delete_expense(clean_db):
 
 
 def test_update_expense(clean_db):
+    """Test updating an expense."""
     # Arrange: insert initial expense
     add_expense(
         100,
@@ -112,3 +123,61 @@ def test_update_expense(clean_db):
     assert row[1] == 250
     assert row[2] == "restaurant"
     assert row[3] == "burger"
+
+
+def test_get_all_expenses_empty_db(clean_db):
+    """Test fetching expenses from an empty database."""
+
+    rows = get_all_expenses(clean_db)
+
+    assert rows == []
+
+
+def test_delete_nonexistent_expense(clean_db):
+    """Test deleting a non-existent expense."""
+
+    delete_expense(999, clean_db)
+
+    rows = get_all_expenses(clean_db)
+
+    assert rows == []
+
+
+def test_update_nonexistent_expense(clean_db):
+    """Test updating a non-existent expense."""
+
+    update_expense(
+        999,
+        100,
+        "food",
+        "pizza",
+        clean_db,
+    )
+
+    rows = get_all_expenses(clean_db)
+
+    assert rows == []
+
+
+def test_add_table_creates_expenses_table(clean_db):
+    """Test that add_table creates the expenses table."""
+
+    con = get_connection(clean_db)
+
+    try:
+        cur = con.cursor()
+
+        cur.execute("""
+            SELECT name
+            FROM sqlite_master
+            WHERE type='table'
+            AND name='expenses'
+        """)
+
+        table = cur.fetchone()
+
+    finally:
+        con.close()
+
+    assert table is not None
+    assert table[0] == "expenses"
