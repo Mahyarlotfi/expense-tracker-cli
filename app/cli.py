@@ -22,7 +22,7 @@ def menu():
     return int(choice)
 
 
-def expense_table():
+def expense_table(repo):
     """Display all expenses in tabular format."""
-    expenses = list_expenses()
+    expenses = list_expenses(repo)
     print(tabulate(expenses, headers="keys", tablefmt="grid"))

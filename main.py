@@ -8,8 +8,11 @@ from app.database import (
 )
 from app.expense import create_expense
 from app.cli import menu, expense_table
+from app.repository import ExpenseRepository
 
 add_table()
+
+repo = ExpenseRepository()
 
 while True:
     choice = menu()
@@ -28,7 +31,7 @@ while True:
         )
 
     elif choice == 2:
-        expense_table()
+        expense_table(repo)
 
     elif choice == 3:
         try:

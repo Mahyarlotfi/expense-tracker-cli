@@ -1,20 +1,32 @@
 """Tests for service layer."""
 
-from unittest.mock import patch
+# pylint: disable=redefined-outer-name
 
+from unittest.mock import Mock
 from app.service import list_expenses
 
 
 def test_list_expenses_returns_formatted_dicts():
-    """Test converting database rows to dictionaries."""
+    """Test listing expenses through repository."""
 
-    fake_rows = [
-        (1, 100, "food", "pizza"),
-        (2, 50, "transport", "taxi"),
+    repo = Mock()
+
+    repo.get_all_expenses.return_value = [
+        {
+            "id": 1,
+            "amount": 100,
+            "category": "food",
+            "description": "pizza",
+        },
+        {
+            "id": 2,
+            "amount": 50,
+            "category": "transport",
+            "description": "taxi",
+        },
     ]
 
-    with patch("app.service.get_all_expenses", return_value=fake_rows):
-        result = list_expenses()
+    result = list_expenses(repo)
 
     assert len(result) == 2
 
