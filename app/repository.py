@@ -1,6 +1,7 @@
 """Repository layer for expense database operations."""
 
 from app.database import (
+    add_table as db_add_table,
     add_expense as db_add_expense,
     get_all_expenses as db_get_all_expenses,
     delete_expense as db_delete_expense,
@@ -17,11 +18,17 @@ def _row_to_dict(row):
     }
 
 
+
+
 class ExpenseRepository:
     """Handles all database operations for expenses."""
 
     def __init__(self, db_name=None):
         self.db_name = db_name
+
+    def create_table(self):
+        """Create expenses table if it does not exist."""
+        db_add_table(self.db_name)
 
     def add_expense(self, amount, category, description):
         """Insert a new expense."""

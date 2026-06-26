@@ -1,18 +1,12 @@
 """Main entry point for expense tracker application."""
 
-from app.database import (
-    add_table,
-    add_expense,
-    delete_expense,
-    update_expense,
-)
 from app.expense import create_expense
 from app.cli import menu, expense_table
 from app.repository import ExpenseRepository
 
-add_table()
-
 repo = ExpenseRepository()
+
+repo.create_table()
 
 while True:
     choice = menu()
@@ -24,7 +18,7 @@ while True:
         expense = create_expense()
         if expense is None:
             continue
-        add_expense(
+        repo.add_expense(
             amount=expense["amount"],
             category=expense["category"],
             description=expense["description"],
@@ -36,7 +30,7 @@ while True:
     elif choice == 3:
         try:
             delete_id = int(input("Please enter your id: "))
-            delete_expense(delete_id)
+            repo.delete_expense(delete_id)
         except ValueError:
             print("Please enter a valid id")
 
@@ -46,7 +40,7 @@ while True:
             expense = create_expense()
             if expense is None:
                 continue
-            update_expense(
+            repo.update_expense(
                 expense_id=update_id,
                 amount=expense["amount"],
                 category=expense["category"],
