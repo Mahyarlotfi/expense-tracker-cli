@@ -1,5 +1,7 @@
 """Expense input and validation logic."""
 
+import datetime
+
 
 def create_expense():
     """Collect and validate expense input from user."""
@@ -11,5 +13,11 @@ def create_expense():
         return None
     category = input("Please enter category: ")
     description = input("Please enter description: ")
-    expense = {"amount": amount, "category": category, "description": description}
+    date = datetime.datetime.now().isoformat()
+    expense = {
+        "amount": amount,
+        "category": category,
+        "description": description,
+        "date": date,
+    }
     return expense

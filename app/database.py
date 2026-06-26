@@ -30,7 +30,8 @@ def add_table(db_name=None):
                 expense_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 amount REAL NOT NULL,
                 category TEXT NOT NULL,
-                description TEXT NOT NULL
+                description TEXT NOT NULL,
+                date TEXT NOT NULL
             )
             """)
         con.commit()
@@ -38,17 +39,17 @@ def add_table(db_name=None):
         con.close()
 
 
-def add_expense(amount, category, description, db_name=None):
+def add_expense(amount, category, description, date, db_name=None):
     """Insert a new expense into database."""
     con = get_connection(db_name)
     try:
         cur = con.cursor()
         cur.execute(
             """
-            INSERT INTO expenses (amount, category, description)
-            VALUES (?, ?, ?)
+            INSERT INTO expenses (amount, category, description, date)
+            VALUES (?, ?, ?, ?)
             """,
-            (amount, category, description),
+            (amount, category, description, date),
         )
         con.commit()
     finally:
@@ -81,7 +82,7 @@ def delete_expense(expense_id, db_name=None):
         con.close()
 
 
-def update_expense(expense_id, amount, category, description, db_name=None):
+def update_expense(expense_id, amount, category, description, date, db_name=None):
     """Update an existing expense."""
     con = get_connection(db_name)
     try:
@@ -91,10 +92,11 @@ def update_expense(expense_id, amount, category, description, db_name=None):
             UPDATE expenses
             SET amount = ?,
                 category = ?,
-                description = ?
+                description = ?,
+                date = ?
             WHERE expense_id = ?
             """,
-            (amount, category, description, expense_id),
+            (amount, category, description, date, expense_id),
         )
         con.commit()
     finally:

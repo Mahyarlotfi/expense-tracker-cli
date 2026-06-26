@@ -22,6 +22,7 @@ while True:
             amount=expense["amount"],
             category=expense["category"],
             description=expense["description"],
+            date=expense["date"],
         )
 
     elif choice == 2:
@@ -45,6 +46,7 @@ while True:
                 amount=expense["amount"],
                 category=expense["category"],
                 description=expense["description"],
+                date = expense["date"]
             )
         except ValueError:
             print("Please enter a valid id")

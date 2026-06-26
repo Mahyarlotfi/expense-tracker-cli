@@ -15,9 +15,8 @@ def _row_to_dict(row):
         "amount": row[1],
         "category": row[2],
         "description": row[3],
+        "date": row[4],
     }
-
-
 
 
 class ExpenseRepository:
@@ -30,9 +29,9 @@ class ExpenseRepository:
         """Create expenses table if it does not exist."""
         db_add_table(self.db_name)
 
-    def add_expense(self, amount, category, description):
+    def add_expense(self, amount, category, description, date):
         """Insert a new expense."""
-        db_add_expense(amount, category, description, self.db_name)
+        db_add_expense(amount, category, description, date, self.db_name)
 
     def get_all_expenses(self):
         """Fetch all expenses."""
@@ -43,12 +42,13 @@ class ExpenseRepository:
         """Delete expense by id."""
         db_delete_expense(expense_id, self.db_name)
 
-    def update_expense(self, expense_id, amount, category, description):
+    def update_expense(self, expense_id, amount, category, description, date):
         """Update expense by id."""
         db_update_expense(
             expense_id,
             amount,
             category,
             description,
+            date,
             self.db_name,
         )

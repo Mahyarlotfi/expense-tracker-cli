@@ -11,11 +11,10 @@ def test_create_expense_valid_input():
     with patch("builtins.input", side_effect=["100", "food", "pizza"]):
         result = create_expense()
 
-    assert result == {
-        "amount": 100.0,
-        "category": "food",
-        "description": "pizza",
-    }
+    assert result["amount"] == 100.0
+    assert result["category"] == "food"
+    assert result["description"] == "pizza"
+    assert "date" in result
 
 
 def test_create_expense_invalid_amount():

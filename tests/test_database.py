@@ -39,6 +39,7 @@ def test_add_expense(clean_db):
         100,
         "food",
         "pizza",
+        "2026-01-01",
         clean_db,
     )
 
@@ -50,14 +51,15 @@ def test_add_expense(clean_db):
     assert row[1] == 100
     assert row[2] == "food"
     assert row[3] == "pizza"
+    assert row[4] == "2026-01-01"
 
 
 def test_get_all_expenses(clean_db):
     """Test retrieving all expenses."""
     data = [
-        (100, "food", "pizza"),
-        (50, "transport", "taxi"),
-        (20, "coffee", "latte"),
+        (100, "food", "pizza", "2026-01-01"),
+        (50, "transport", "taxi", "2026-01-01"),
+        (20, "coffee", "latte", "2026-01-01"),
     ]
 
     for item in data:
@@ -67,9 +69,10 @@ def test_get_all_expenses(clean_db):
 
     assert len(rows) == 3
 
-    for amount, category, description in data:
+    for amount, category, description, date in data:
         assert any(
-            r[1] == amount and r[2] == category and r[3] == description for r in rows
+            r[1] == amount and r[2] == category and r[3] == description and r[4] == date
+            for r in rows
         )
 
 
@@ -79,6 +82,7 @@ def test_delete_expense(clean_db):
         100,
         "food",
         "pizza",
+        "2026-01-01",
         clean_db,
     )
 
@@ -98,6 +102,7 @@ def test_update_expense(clean_db):
         100,
         "food",
         "pizza",
+        "2026-01-01",
         clean_db,
     )
 
@@ -110,6 +115,7 @@ def test_update_expense(clean_db):
         250,
         "restaurant",
         "burger",
+        "2026-01-02",
         clean_db,
     )
 
@@ -123,6 +129,7 @@ def test_update_expense(clean_db):
     assert row[1] == 250
     assert row[2] == "restaurant"
     assert row[3] == "burger"
+    assert row[4] == "2026-01-02"
 
 
 def test_get_all_expenses_empty_db(clean_db):
