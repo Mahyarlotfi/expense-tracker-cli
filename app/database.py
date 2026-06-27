@@ -39,7 +39,7 @@ def add_table(db_name=None):
         con.close()
 
 
-def add_expense(amount, category, description, date, db_name=None):
+def add_expense(expense, db_name=None):
     """Insert a new expense into database."""
     con = get_connection(db_name)
     try:
@@ -49,7 +49,12 @@ def add_expense(amount, category, description, date, db_name=None):
             INSERT INTO expenses (amount, category, description, date)
             VALUES (?, ?, ?, ?)
             """,
-            (amount, category, description, date),
+            (
+                expense.amount,
+                expense.category,
+                expense.description,
+                expense.date,
+            ),
         )
         con.commit()
     finally:
@@ -82,7 +87,7 @@ def delete_expense(expense_id, db_name=None):
         con.close()
 
 
-def update_expense(expense_id, amount, category, description, date, db_name=None):
+def update_expense(expense_id, expense, db_name=None):
     """Update an existing expense."""
     con = get_connection(db_name)
     try:
@@ -96,7 +101,13 @@ def update_expense(expense_id, amount, category, description, date, db_name=None
                 date = ?
             WHERE expense_id = ?
             """,
-            (amount, category, description, date, expense_id),
+            (
+                expense.amount,
+                expense.category,
+                expense.description,
+                expense.date,
+                expense_id,
+            ),
         )
         con.commit()
     finally:

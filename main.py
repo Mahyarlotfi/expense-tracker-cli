@@ -37,11 +37,8 @@ while True:
             if expense is None:
                 continue
             repo.update_expense(
-                expense_id=update_id,
-                amount=expense["amount"],
-                category=expense["category"],
-                description=expense["description"],
-                date = expense["date"]
+                update_id,
+                expense,
             )
         except ValueError:
             print("Please enter a valid id")

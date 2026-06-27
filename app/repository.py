@@ -33,11 +33,9 @@ class ExpenseRepository:
     def add_expense(self, expense: Expense):
         """Insert a new expense."""
         db_add_expense(
-            expense.amount,
-            expense.category,
-            expense.description,
-            expense.date,
-            self.db_name)
+            expense,
+            self.db_name,
+        )
 
     def get_all_expenses(self):
         """Fetch all expenses."""
@@ -48,13 +46,10 @@ class ExpenseRepository:
         """Delete expense by id."""
         db_delete_expense(expense_id, self.db_name)
 
-    def update_expense(self, expense_id, amount, category, description, date):
+    def update_expense(self, expense_id, expense: Expense):
         """Update expense by id."""
         db_update_expense(
             expense_id,
-            amount,
-            category,
-            description,
-            date,
+            expense,
             self.db_name,
         )

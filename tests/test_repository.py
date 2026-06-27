@@ -9,7 +9,6 @@ from app.repository import ExpenseRepository
 from app.database import add_table
 from app.models import Expense
 
-
 TEST_DB = "test_expenses.db"
 
 
@@ -72,11 +71,8 @@ def test_get_all_expenses(repo):
 
     for amount, category, description, date in data:
         expense = Expense(
-            amount=amount,
-            category=category,
-            description=description,
-            date=date
-            )
+            amount=amount, category=category, description=description, date=date
+        )
         repo.add_expense(expense)
 
     rows = repo.get_all_expenses()
@@ -130,13 +126,14 @@ def test_update_expense(repo):
     rows = repo.get_all_expenses()
     expense_id = rows[0]["id"]
 
-    repo.update_expense(
-        expense_id,
-        250,
-        "restaurant",
-        "burger",
-        "2026-01-03",
+    expense = Expense(
+        amount=250,
+        category="restaurant",
+        description="burger",
+        date="2026-01-03",
     )
+
+    repo.update_expense(expense_id, expense)
 
     updated_rows = repo.get_all_expenses()
 

@@ -3,6 +3,7 @@
 import datetime
 from app.models import Expense
 
+
 def create_expense():
     """Collect and validate expense input from user."""
     amount = input("Please enter amount: ")
@@ -19,4 +20,4 @@ def create_expense():
         category=category,
         description=description,
         date=date,
-        )
+    )

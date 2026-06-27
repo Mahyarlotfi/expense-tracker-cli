@@ -15,6 +15,7 @@ from app.database import (
 )
 
 from app.database import get_connection
+from app.models import Expense
 
 TEST_DB = "test_expenses.db"
 
@@ -35,13 +36,14 @@ def clean_db():
 
 def test_add_expense(clean_db):
     """Test adding a new expense."""
-    add_expense(
-        100,
-        "food",
-        "pizza",
-        "2026-01-01",
-        clean_db,
+    expense = Expense(
+        amount=100,
+        category="food",
+        description="pizza",
+        date="2026-01-01",
     )
+
+    add_expense(expense, clean_db)
 
     rows = get_all_expenses(clean_db)
 
@@ -57,34 +59,38 @@ def test_add_expense(clean_db):
 def test_get_all_expenses(clean_db):
     """Test retrieving all expenses."""
     data = [
-        (100, "food", "pizza", "2026-01-01"),
-        (50, "transport", "taxi", "2026-01-01"),
-        (20, "coffee", "latte", "2026-01-01"),
+        Expense(100, "food", "pizza", "2026-01-01"),
+        Expense(50, "transport", "taxi", "2026-01-01"),
+        Expense(20, "coffee", "latte", "2026-01-01"),
     ]
 
-    for item in data:
-        add_expense(*item, clean_db)
+    for expense in data:
+        add_expense(expense, clean_db)
 
     rows = get_all_expenses(clean_db)
 
     assert len(rows) == 3
 
-    for amount, category, description, date in data:
+    for expense in data:
         assert any(
-            r[1] == amount and r[2] == category and r[3] == description and r[4] == date
+            r[1] == expense.amount
+            and r[2] == expense.category
+            and r[3] == expense.description
+            and r[4] == expense.date
             for r in rows
         )
 
 
 def test_delete_expense(clean_db):
     """Test deleting an expense."""
-    add_expense(
-        100,
-        "food",
-        "pizza",
-        "2026-01-01",
-        clean_db,
+    expense = Expense(
+        amount=100,
+        category="food",
+        description="pizza",
+        date="2026-01-01",
     )
+
+    add_expense(expense, clean_db)
 
     rows_before = get_all_expenses(clean_db)
     expense_id = rows_before[0][0]
@@ -98,26 +104,21 @@ def test_delete_expense(clean_db):
 def test_update_expense(clean_db):
     """Test updating an expense."""
     # Arrange: insert initial expense
-    add_expense(
-        100,
-        "food",
-        "pizza",
-        "2026-01-01",
-        clean_db,
+    expense = Expense(
+        amount=100,
+        category="food",
+        description="pizza",
+        date="2026-01-01",
     )
+
+    add_expense(expense, clean_db)
 
     rows = get_all_expenses(clean_db)
     expense_id = rows[0][0]
 
     # Act: update expense
-    update_expense(
-        expense_id,
-        250,
-        "restaurant",
-        "burger",
-        "2026-01-02",
-        clean_db,
-    )
+    expense = Expense(250, "restaurant", "burger", "2026-01-02")
+    update_expense(expense_id, expense, clean_db)
 
     # Assert: verify update
     updated_rows = get_all_expenses(clean_db)
@@ -153,11 +154,16 @@ def test_delete_nonexistent_expense(clean_db):
 def test_update_nonexistent_expense(clean_db):
     """Test updating a non-existent expense."""
 
+    expense = Expense(
+        amount=100,
+        category="food",
+        description="pizza",
+        date="2026-01-01",
+    )
+
     update_expense(
         999,
-        100,
-        "food",
-        "pizza",
+        expense,
         clean_db,
     )
 
