@@ -7,6 +7,8 @@ import pytest
 
 from app.repository import ExpenseRepository
 from app.database import add_table
+from app.models import Expense
+
 
 TEST_DB = "test_expenses.db"
 
@@ -39,12 +41,14 @@ def test_create_table(repo):
 def test_add_expense(repo):
     """Test adding an expense to repository."""
 
-    repo.add_expense(
-        100,
-        "food",
-        "pizza",
-        "2026-01-01",
+    expense = Expense(
+        amount=100,
+        category="food",
+        description="pizza",
+        date="2026-01-01",
     )
+
+    repo.add_expense(expense)
 
     rows = repo.get_all_expenses()
 
@@ -67,7 +71,13 @@ def test_get_all_expenses(repo):
     ]
 
     for amount, category, description, date in data:
-        repo.add_expense(amount, category, description, date)
+        expense = Expense(
+            amount=amount,
+            category=category,
+            description=description,
+            date=date
+            )
+        repo.add_expense(expense)
 
     rows = repo.get_all_expenses()
 
@@ -86,7 +96,14 @@ def test_get_all_expenses(repo):
 def test_delete_expense(repo):
     """Test deleting an expense."""
 
-    repo.add_expense(100, "food", "pizza", "2026-01-01")
+    expense = Expense(
+        amount=100,
+        category="food",
+        description="pizza",
+        date="2026-01-01",
+    )
+
+    repo.add_expense(expense)
 
     rows_before = repo.get_all_expenses()
     expense_id = rows_before[0]["id"]
@@ -101,7 +118,14 @@ def test_delete_expense(repo):
 def test_update_expense(repo):
     """Test updating an expense."""
 
-    repo.add_expense(100, "food", "pizza", "2026-01-01")
+    expense = Expense(
+        amount=100,
+        category="food",
+        description="pizza",
+        date="2026-01-01",
+    )
+
+    repo.add_expense(expense)
 
     rows = repo.get_all_expenses()
     expense_id = rows[0]["id"]

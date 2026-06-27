@@ -18,12 +18,7 @@ while True:
         expense = create_expense()
         if expense is None:
             continue
-        repo.add_expense(
-            amount=expense["amount"],
-            category=expense["category"],
-            description=expense["description"],
-            date=expense["date"],
-        )
+        repo.add_expense(expense)
 
     elif choice == 2:
         expense_table(repo)

@@ -7,6 +7,7 @@ from app.database import (
     delete_expense as db_delete_expense,
     update_expense as db_update_expense,
 )
+from app.models import Expense
 
 
 def _row_to_dict(row):
@@ -29,9 +30,14 @@ class ExpenseRepository:
         """Create expenses table if it does not exist."""
         db_add_table(self.db_name)
 
-    def add_expense(self, amount, category, description, date):
+    def add_expense(self, expense: Expense):
         """Insert a new expense."""
-        db_add_expense(amount, category, description, date, self.db_name)
+        db_add_expense(
+            expense.amount,
+            expense.category,
+            expense.description,
+            expense.date,
+            self.db_name)
 
     def get_all_expenses(self):
         """Fetch all expenses."""
